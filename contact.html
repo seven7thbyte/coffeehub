@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+</head>
+<body class="bg-gray-600">
+    <nav class="bg-red-600 space-x-4 px-4 py-4">
+        <div class="flex px-2 py-2 items-center justify-between">
+            <h1 class="text-white font-bold text-xl">CoffeeHub</h1>
+            <div class="hidden md:flex space-x-2 gap-4 items-center justify-center">
+                <a href="./home.html" class="text-white font-bold text-l hover:bg-orange-500 hover:rounded-[10px] px-4 py-2 hover:text-white">Home</a>
+                <a href="./contact.html" class="text-white font-bold text-l hover:bg-orange-500 hover:rounded-[10px] px-4 py-2 hover:text-white">Contact</a>
+            </div>
+            <button id="login" class="hidden md:flex bg-white text-l font-bold hover:bg-orange-500 hover:rounded-[10px] px-4 py-2 hover:scale-105 transition hover:text-white">LogIn</button>
+            <button id="hamburger" class="md:hidden"><i class="fa-bars fa-solid text-white font-bold text-l"></i></button>
+        </div>
+    </nav>
+
+
+
+        <div id="mobile-menu"class="hidden flex flex-col md:hidden px-2 py-2 items-center justify-center w-1/2 h-78 bg-red-700 fixed z-50 top-24 right-4 rounded">
+            <div class="space-x-2 gap-2 items-center justify-center flex flex-col">
+                <a href="./home.html" class="text-white font-bold text-l hover:bg-orange-500 hover:rounded-[10px] px-4 py-2 hover:text-white">Home</a>
+                <a href="./contact.html" class="text-white font-bold text-l hover:bg-orange-500 hover:rounded-[10px] px-4 py-2 hover:text-white">Contact</a>
+                <button id="login" class="bg-white flex items-center justify-center text-l font-bold hover:bg-orange-500 hover:rounded-[10px] w-24 px-6 py-2 hover:scale-105 transition hover:text-white">LogIn</button>
+            </div>
+        </div>
+        <div class="items-center justify-center flex my-8 flex-wrap flex-col">
+            <video controls class="w-full max-w-4xl aspect-video">
+                <source src="./assets/Set2_Video.mp4" type="video/mp4" >
+                <track kind="subtitles" src="subtitles/subtitle.vtt" label="English" lang="en">
+            </video>
+        </div>
+        <section class="flex items-center justify-center flex-col flex-wrap">
+            <audio controls class="w-full max-w-xl mt-4">
+                <source src="./audio/Set2_Audio.mp3" type="audio/mp3">
+            </audio>
+        </section>
+
+        <div class="mt-4 flex flex-col items-center justify-center">
+            <h1 class="text-white font-bold text-3xl">YOUR LOCATION</h1>
+            <p class="text-white">Latitude: <span id="lat"></span></p>
+            <p class="text-white">Longitude: <span id="lon"></span></p>
+            <div id="error" class="text-white"></div>
+        </div>
+
+        <script>
+            document.getElementById('hamburger').addEventListener('click',()=>{
+                const menu = document.querySelector('#mobile-menu');
+                menu.classList.toggle('hidden')
+            })
+
+            document.getElementsByClassName('fa-bars')[0].addEventListener('click',function(){
+                if(this.classList.contains("fa-bars")){
+                    this.classList.replace("fa-bars","fa-xmark");
+                }
+                else if(this.classList.contains("fa-xmark")){
+                    this.classList.replace("fa-xmark","fa-bars");
+                }
+            })
+
+            const longitude= document.getElementById("lon");
+            const latitude = document.getElementById("lat");
+            window.onload = function(){
+                if(navigator.geolocation){
+                    navigator.geolocation.getCurrentPosition(getPositions,showError);
+                }
+                else{
+                    console.log("Browser don't support");
+                }
+            }
+            function getPositions(position){
+                longitude.innerText= position.coords.longitude;
+                latitude.innerText = position.coords.latitude;
+                time.innerText = Date(position.timestamp)
+            }
+
+            function showError(error){
+                let msg ="";
+                switch(error.code){
+                    case error.PERMISSION_DENIED:
+                        msg="User Denied Acces";
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        msg="User Denied Acces";
+                        break;
+                    case error.TIMEOUT:
+                        msg="Time Out";
+                        break;
+                    case error.UNKONOWN_ERROR:
+                        msg="UNKNOWN Error";
+                        break;
+                }
+                displayError(msg);
+            }
+
+            function displayError(msg){
+                document.getElementById("error").innerText=msg;
+            }
+
+        </script>
+</body>
+</html>

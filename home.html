@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+</head>
+<body class="bg-gray-600">
+    <nav class="bg-red-600 space-x-4 px-4 py-4">
+        <div class="flex px-2 py-2 items-center justify-between">
+            <h1 class="text-white font-bold text-xl">CoffeeHub</h1>
+            <div class="hidden md:flex space-x-2 gap-4 items-center justify-center">
+                <a href="./home.html" class="text-white font-bold text-l hover:bg-orange-500 hover:rounded-[10px] px-4 py-2 hover:text-white">Home</a>
+                <a href="./contact.html" class="text-white font-bold text-l hover:bg-orange-500 hover:rounded-[10px] px-4 py-2 hover:text-white">Contact</a>
+                <input type="text" id="search" placeholder="Search" class="rounded-[20px] px-4 py-2 ">
+                <button id="searchTitle" class="bg-white text-l font-bold hover:bg-orange-500 hover:rounded-[10px] px-2 py-2 hover:text-white focus:outline-0">Search</button>
+            </div>
+            <a href="./login.html"><button id="login" class="hidden md:flex bg-white text-l font-bold hover:bg-orange-500 hover:rounded-[10px] px-4 py-2 hover:scale-105 transition hover:text-white">LogIn</button></a>
+            <button id="hamburger" class="md:hidden"><i class="fa-bars fa-solid text-white font-bold text-l"></i></button>
+        </div>
+    </nav>
+
+
+    <header id="heroes" class="relative">
+                <img src="./assets/banner.jpg" alt="hero" class="h-[300px] w-full md:h-[800px]">
+            <div class="flex justify-center items-center inset-0 absolute flex-col space-y-4">
+                <h1 class="text-4xl font-bold text-white flex justify-center items-center">Welcome To the CoffeHub</h1>
+                <p class="text-xl text-white font-bold">Our Shops has the best coffee</p>
+                <div class="flex">
+                    <input type="email" name="email" id="email" placeholder="Email" class="px-4 py-4">
+                    <button class="bg-black text-white px-8 py-4 font-bold" id="submit">Submit</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+        <div id="mobile-menu"class="hidden flex flex-col md:hidden px-2 py-2 items-center justify-center w-1/2 h-78 bg-red-700 fixed z-50 top-24 right-4 rounded">
+            <div class="space-x-2 gap-2 items-center justify-center flex flex-col">
+                <a href="./home.html" class="text-white font-bold text-l hover:bg-orange-500 hover:rounded-[10px] px-4 py-2 hover:text-white">Home</a>
+                <a href="./contact.html" class="text-white font-bold text-l hover:bg-orange-500 hover:rounded-[10px] px-4 py-2 hover:text-white">Contact</a>
+                <input type="text" id="search" placeholder="Search" class="rounded-[20px] px-4 py-2">
+                <button id="searchTitle" class="bg-white text-l font-bold hover:bg-orange-500 hover:rounded-[10px] px-6 py-2 hover:text-white focus:outline-0 mb-2">Search</button>
+                <a href="./login.html"><button id="login" class="bg-white flex items-center justify-center text-l font-bold hover:bg-orange-500 hover:rounded-[10px] w-24 px-6 py-2 hover:scale-105 transition hover:text-white">LogIn</button></a>
+            </div>
+        </div>
+
+        <div class="flex justify-center gap-4 mt-4">
+            <select id="sortTitle" class="px-4 py-1 rounded">
+                <option value="">Sort By Title</option>
+                <option value="aZ">A - Z</option>
+                <option value="zA">Z - A</option>
+            </select>
+        </div>
+
+        <div id="container" class="flex flex-wrap gap-4 items-center justify-center">
+
+        </div>
+
+        <script>
+            document.getElementById('hamburger').addEventListener('click',()=>{
+                const menu = document.querySelector('#mobile-menu');
+                menu.classList.toggle('hidden')
+            })
+
+            document.getElementsByClassName('fa-bars')[0].addEventListener('click',function(){
+                if(this.classList.contains("fa-bars")){
+                    this.classList.replace("fa-bars","fa-xmark");
+                }
+                else if(this.classList.contains("fa-xmark")){
+                    this.classList.replace("fa-xmark","fa-bars");
+                }
+            })
+
+        let coffeeArray = [];
+        const container = document.querySelector('#container');
+        const searchTitle = document.querySelector('#sortTitle');
+        const searchBar = document.querySelector('#search');
+        const button = document.getElementById('searchTitle')
+
+        fetch('https://api.sampleapis.com/coffee/hot')
+        .then(response => response.json())
+        .then(data => {
+            coffeeArray = data;
+            displayProducts(coffeeArray);
+        })
+
+        function displayProducts(products){
+            container.innerHTML="";
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className="flex flex-col mt-4 items-center justify-center bg-white rounded h-[450px] w-60 p-4 text-sm font-semibold hover:scale-105 transition overflow-hidden";
+
+                card.innerHTML=`
+                    <img src="${product.image}" alt="${product.title}" class="h-40 object-contain mb-2 w-full rounded"/>
+                    <h2>${product.title}</h2>
+                    <p class="mt-2">Description: ${product.description}</p>
+                    <p class="mt-2">Ingredients: ${product.ingredients}</p>
+                `
+                container.appendChild(card);
+            })
+        }
+
+        button.addEventListener('click',()=>{
+            filterAndSort();
+        })
+
+        searchTitle.addEventListener('change',()=>{
+            filterAndSort();
+        })
+
+        function filterAndSort(){
+            let filtered = [...coffeeArray];
+            const keyword = searchBar.value.toLowerCase();
+            if(keyword){
+                filtered = filtered.filter(p => p.title.toLowerCase().includes(keyword))
+            }
+
+            const titleSort = searchTitle.value;
+            if(titleSort === 'aZ'){
+                filtered.sort((a,b) => a.title.localeCompare(b.title));
+            } else if(titleSort === 'zA'){
+                filtered.sort((a,b) => b.title.localeCompare(a.title));
+            }
+
+            displayProducts(filtered);
+        }
+
+        document.getElementById("submit").addEventListener('click',()=>{
+            const dataarr=[];
+            const data = document.getElementById('email').value;
+            sessionStorage.setItem('email: ',data);
+            const email = sessionStorage.getItem('email');
+            dataarr.push(email);
+            data.value="";
+        });
+
+        </script>
+</body>
+</html>

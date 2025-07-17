@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="w-full h-screen bg-gradient-to-r from-black to-gray-200">
+    
+    <nav class="bg-red-600 flex items-center justify-between px-4 py-8">
+        <div>
+            <a href="./index.html" class="text-white font-bold text-xl">CoffeeHub</a>
+        </div>
+    </nav>
+    <div class="h-[80%] w-full flex items-center justify-center">
+        <div class="bg-white flex flex-col items-center justify-between w-[450px] h-[550px] rounded-[20px]">
+            <h1 class="text-xl font-bold mt-4">LogIn / SignIn</h1>
+            <form action="" class="space-y-6 mt-4 flex items-center flex-col">
+                <input type="text" name="name" id="name" placeholder="Name" class="px-2 py-4 rounded-[10px] border-2 border-black w-80" required><br>
+                <input type="email" name="email" id="email" placeholder="Email ID" class="px-2 py-4 rounded-[10px] border-2 border-black w-80" required><br>
+                <input type="password" name="pass" id="password" placeholder="Password" class="px-2 py-4 rounded-[10px] border-2 border-black w-80" required>
+                <input type="text" name="coffee" id="coffee" placeholder="Favourite Coffee" class="px-2 py-4 rounded-[10px] border-2 border-black w-80" required>
+            </form>
+            <button id="submit" class="bg-black text-l rounded-[20px] font-semibold px-4 py-4 text-white mb-4 mt-4 w-40 hover:scale-105 transition">Submit</button>
+        </div>
+    </div>
+
+
+    <script>
+        const data =[];
+        document.getElementById('submit').addEventListener('click',()=>{
+            const name = document.getElementById('name').value
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const coffee = document.getElementById('coffee').value;
+            const adata = {name,email,password,coffee};
+            localStorage.setItem("Data",JSON.stringify(adata));
+            const demail = JSON.parse(localStorage.getItem('Data'));
+            data.push(demail);
+        })
+    </script>
+</body>
+</html>
